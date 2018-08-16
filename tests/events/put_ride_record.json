@@ -1,0 +1,56 @@
+{
+    "resource": "/record",
+    "path": "/record",
+    "httpMethod": "POST",
+    "headers": {
+        "Accept": "*/*",
+        "CloudFront-Forwarded-Proto": "https",
+        "CloudFront-Is-Desktop-Viewer": "true",
+        "CloudFront-Is-Mobile-Viewer": "false",
+        "CloudFront-Is-SmartTV-Viewer": "false",
+        "CloudFront-Is-Tablet-Viewer": "false",
+        "CloudFront-Viewer-Country": "US",
+        "content-type": "application/json",
+        "Host": "6u0f8wo646.execute-api.us-east-1.amazonaws.com",
+        "User-Agent": "curl/7.54.0",
+        "Via": "2.0 488ca64b2230001b81f1cbf87d34963b.cloudfront.net (CloudFront)",
+        "X-Amz-Cf-Id": "EbJtXrattxCp_kGiAvOkZQfqrU7GaCnWQOBd_sqWLOu1CI3mg5hzew==",
+        "X-Amzn-Trace-Id": "Root=1-5b6e22fc-caa80860f02a362eda99cf9c",
+        "X-Forwarded-For": "73.17.175.174, 52.46.29.59",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "queryStringParameters": null,
+    "pathParameters": null,
+    "stageVariables": null,
+    "requestContext": {
+        "resourceId": "spy0ia",
+        "resourcePath": "/record",
+        "httpMethod": "POST",
+        "extendedRequestId": "LbpnYHl3oAMFYUg=",
+        "requestTime": "10/Aug/2018:23:42:52 +0000",
+        "path": "/dev/record",
+        "accountId": "144121712529",
+        "protocol": "HTTP/1.1",
+        "stage": "dev",
+        "requestTimeEpoch": 1533944572060,
+        "requestId": "18bb8de3-9cf7-11e8-aa6f-eda086839e1d",
+        "identity": {
+            "cognitoIdentityPoolId": null,
+            "accountId": null,
+            "cognitoIdentityId": null,
+            "caller": null,
+            "sourceIp": "73.17.175.174",
+            "accessKey": null,
+            "cognitoAuthenticationType": null,
+            "cognitoAuthenticationProvider": null,
+            "userArn": null,
+            "userAgent": "curl/7.54.0",
+            "user": null
+        },
+        "apiId": "6u0f8wo646"
+    },
+    "body": "{\"RideId\": \"cb4e0e60-9c23-11e8-af29-8a060cb55967\", \"Unicorn\": {\"Name\": \"Bucephalus\", \"Color\": \"Golden\"}, \"RequestTime\": \"2018-08-09 22:30:18.347888\"}",
+    "isBase64Encoded": false
+}
+

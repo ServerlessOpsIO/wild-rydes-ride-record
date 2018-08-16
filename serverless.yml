@@ -1,0 +1,97 @@
+# Ride record service
+service: wild-rydes-ride-record
+
+plugins:
+  - serverless-python-requirements
+
+
+custom:
+  stage: "${opt:stage, env:SLS_STAGE, 'dev'}"
+  region: "${opt:region, 'us-east-2'}"
+  log_level: "${env:LOG_LEVEL, 'INFO'}"
+
+  pythonRequirements:
+    dockerizePip: false
+
+  ddb_table_hash_key: 'RideId'
+  sevrice_url_path_base: '/record'
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: ${self:custom.stage}
+  region: ${self:custom.region}
+  cfnRole: "arn:aws:iam::${env:AWS_ACCOUNT}:role/CloudFormationDeployRole"
+  environment:
+    LOG_LEVEL: ${self:custom.log_level}
+  stackTags:
+    x-service: wild-rydes-ride-record
+    x-stack: ${self:service}-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+      Resource:
+        Fn::GetAtt:
+          - RideRecordTable
+          - Arn
+
+functions:
+  PutRideRecord:
+    handler: handlers/put_ride_record.handler
+    description: "Create Ride Record In Table"
+    memorySize: 128
+    timeout: 29
+    environment:
+      DDB_TABLE_NAME:
+        Ref: RideRecordTable
+    events:
+      - http:
+          method: POST
+          path: "${self:custom.sevrice_url_path_base}"
+
+resources:
+  Resources:
+    RideRecordTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: ${self:custom.ddb_table_hash_key}
+            AttributeType: S
+        KeySchema:
+          - AttributeName: ${self:custom.ddb_table_hash_key}
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+
+    ServiceUrlSsmParam:
+      Type: "AWS::SSM::Parameter"
+      Properties:
+        Name: "/${self:service}/${self:provider.stage}/URL"
+        Type: String
+        Value:
+          Fn::Join:
+            - ""
+            - - "https://"
+              - Ref: ApiGatewayRestApi
+              - ".execute-api."
+              - Ref: AWS::Region
+              - ".amazonaws.com/${self:custom.stage}"
+              - "${self:custom.sevrice_url_path_base}"
+
+  Outputs:
+    RideRecordUrl:
+      Description: "URL of service"
+      Value:
+        Fn::Join:
+          - ""
+          - - "https://"
+            - Ref: ApiGatewayRestApi
+            - ".execute-api."
+            - Ref: AWS::Region
+            - ".amazonaws.com/${self:custom.stage}"
+            - "/record"
+      Export:
+        Name: "${self:service}-${self:provider.stage}-RideRecordUrl"
+
