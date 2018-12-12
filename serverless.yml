@@ -16,6 +16,8 @@ custom:
   ddb_table_hash_key: 'RideId'
   sevrice_url_path_base: '/record'
 
+  thundraApiKey: "${ssm:/thundra/root/api-key}"
+
 provider:
   name: aws
   runtime: python3.6
@@ -24,6 +26,7 @@ provider:
   cfnRole: "arn:aws:iam::${env:AWS_ACCOUNT}:role/CloudFormationDeployRole"
   environment:
     LOG_LEVEL: ${self:custom.log_level}
+    THUNDRA_API_KEY: ${self:custom.thundraApiKey}
   stackTags:
     x-service: wild-rydes-ride-record
     x-stack: ${self:service}-${self:provider.stage}
