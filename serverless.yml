@@ -64,9 +64,7 @@ resources:
         KeySchema:
           - AttributeName: ${self:custom.ddb_table_hash_key}
             KeyType: HASH
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+        BillingMode: PAY_PER_REQUEST
 
     ServiceUrlSsmParam:
       Type: "AWS::SSM::Parameter"
