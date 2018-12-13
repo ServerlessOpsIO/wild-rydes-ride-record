@@ -17,6 +17,7 @@ custom:
   sevrice_url_path_base: '/record'
 
   thundraApiKey: "${ssm:/thundra/root/api-key}"
+  wild_rydes_sns_topic_arn: "${ssm:/wild-rydes/${self:custom.stage}/SnsTopicArn}"
 
 provider:
   name: aws
@@ -52,6 +53,17 @@ functions:
       - http:
           method: POST
           path: "${self:custom.sevrice_url_path_base}"
+
+  PutRideRecordSns:
+    handler: handlers/put_ride_record.handler_sns
+    description: "Create Ride Record In Table via SNS event"
+    memorySize: 128
+    timeout: 29
+    environment:
+      DDB_TABLE_NAME:
+        Ref: RideRecordTable
+    events:
+      - sns: "${self:custom.wild_rydes_sns_topic_arn}"
 
 resources:
   Resources:
