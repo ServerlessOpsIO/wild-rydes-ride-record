@@ -7,6 +7,7 @@ import os
 import boto3
 
 from thundra.thundra_agent import Thundra
+from thundra.plugins.trace.traceable import Traceable
 THUNDRA_API_KEY = os.environ.get('THUNDRA_API_KEY', '')
 thundra = Thundra(api_key=THUNDRA_API_KEY)
 
@@ -23,6 +24,7 @@ dynamodb = boto3.resource('dynamodb')
 DDT = dynamodb.Table(DDB_TABLE_NAME)
 
 
+@Traceable(trace_args=True, trace_return_value=True)
 def _put_ride_record(ride_record):
     '''Write ride_record to DDB'''
     try:
@@ -35,6 +37,7 @@ def _put_ride_record(ride_record):
         raise e
 
 
+@thundra
 def handler_http(event, context):
     '''Function entry'''
     _logger.info('Event received: {}'.format(json.dumps(event)))
@@ -53,6 +56,7 @@ def handler_http(event, context):
     return resp
 
 
+@thundra
 def handler_sns(event, context):
     '''Function entry'''
     _logger.info('Event received: {}'.format(json.dumps(event)))
