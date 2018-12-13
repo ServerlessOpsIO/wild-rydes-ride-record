@@ -40,6 +40,15 @@ def handler_http(event, context):
     return resp
 
 
+def handler_sns(event, context):
+    '''Function entry'''
+    _logger.info('Event received: {}'.format(json.dumps(event)))
+
+    ride_record = json.loads(event.get('Records')[0].get('Sns').get('Message'))
+
+    _put_ride_record(ride_record)
+
+
 @thundra
 def handler(event, context):
     '''Function entry'''
