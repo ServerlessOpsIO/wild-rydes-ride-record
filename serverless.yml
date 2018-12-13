@@ -3,7 +3,7 @@ service: wild-rydes-ride-record
 
 plugins:
   - serverless-python-requirements
-
+  - serverless-plugin-lambda-dead-letter
 
 custom:
   stage: "${opt:stage, env:SLS_STAGE, 'dev'}"
@@ -39,6 +39,13 @@ provider:
         Fn::GetAtt:
           - RideRecordTable
           - Arn
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+      Resource:
+        Fn::GetAtt:
+          - PutRideRecordSnsDlq
+          - Arn
 
 functions:
   PutRideRecordHttp:
@@ -62,6 +69,9 @@ functions:
     environment:
       DDB_TABLE_NAME:
         Ref: RideRecordTable
+    deadLetter:
+      targetArn:
+        GetResourceArn: PutRideRecordSnsDlq
     events:
       - sns: "${self:custom.wild_rydes_sns_topic_arn}"
 
@@ -92,6 +102,9 @@ resources:
               - Ref: AWS::Region
               - ".amazonaws.com/${self:custom.stage}"
               - "${self:custom.sevrice_url_path_base}"
+
+    PutRideRecordSnsDlq:
+      Type: AWS::SQS::Queue
 
   Outputs:
     RideRecordUrl:
