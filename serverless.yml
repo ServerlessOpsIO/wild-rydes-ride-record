@@ -40,9 +40,9 @@ provider:
           - Arn
 
 functions:
-  PutRideRecord:
-    handler: handlers/put_ride_record.handler
-    description: "Create Ride Record In Table"
+  PutRideRecordHttp:
+    handler: handlers/put_ride_record.handler_http
+    description: "Create Ride Record In Table via API Gateway event"
     memorySize: 128
     timeout: 29
     environment:
