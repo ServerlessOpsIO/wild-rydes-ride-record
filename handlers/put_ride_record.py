@@ -16,6 +16,19 @@ DDB_TABLE_HASH_KEY = os.environ.get('DDB_TABLE_HASH_KEY')
 dynamodb = boto3.resource('dynamodb')
 DDT = dynamodb.Table(DDB_TABLE_NAME)
 
+
+def _put_ride_record(ride_record):
+    '''Write ride_record to DDB'''
+    try:
+        DDT.put_item(
+            TableName=DDB_TABLE_NAME,
+            Item=ride_record
+        )
+    except Exception as e:
+        _logger.exception(e)
+        raise e
+
+
 def handler_http(event, context):
     '''Function entry'''
     _logger.info('Event received: {}'.format(json.dumps(event)))
