@@ -22,6 +22,23 @@ DDB_TABLE_HASH_KEY = os.environ.get('DDB_TABLE_HASH_KEY')
 dynamodb = boto3.resource('dynamodb')
 DDT = dynamodb.Table(DDB_TABLE_NAME)
 
+def handler_http(event, context):
+    '''Function entry'''
+    _logger.info('Event received: {}'.format(json.dumps(event)))
+
+    ride_record = json.loads(event.get('body'))
+
+    _put_ride_record(ride_record)
+
+    resp = {
+        'statusCode': 201,
+        'body': json.dumps({'success': True})
+    }
+
+    _logger.info('Response: {}'.format(json.dumps(resp)))
+
+    return resp
+
 
 @thundra
 def handler(event, context):
