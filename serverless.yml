@@ -87,6 +87,18 @@ resources:
           - AttributeName: ${self:custom.ddb_table_hash_key}
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
+        StreamSpecification:
+          StreamViewType: "NEW_IMAGE"
+
+    RideRecordTableStreamSsmParam:
+      Type: "AWS::SSM::Parameter"
+      Properties:
+        Name: "/${self:service}/${self:provider.stage}/DdbStreamArn"
+        Type: String
+        Value:
+          Fn::GetAtt:
+            - RideRecordTable
+            - StreamArn
 
     ServiceUrlSsmParam:
       Type: "AWS::SSM::Parameter"
