@@ -41,6 +41,27 @@ provider:
           - Arn
     - Effect: Allow
       Action:
+        - dynamodb:UpdateItem
+      Resource:
+        Fn::GetAtt:
+          - RideRecordTable
+          - Arn
+    - Effect: Allow
+      Action:
+        - dynamodb:DeleteItem
+      Resource:
+        Fn::GetAtt:
+          - RideRecordTable
+          - Arn
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+      Resource:
+        Fn::GetAtt:
+          - RideRecordTable
+          - Arn
+    - Effect: Allow
+      Action:
         - sqs:SendMessage
       Resource:
         Fn::GetAtt:
@@ -74,6 +95,45 @@ functions:
         GetResourceArn: PutRideRecordSnsDlq
     events:
       - sns: "${self:custom.wild_rydes_sns_topic_arn}"
+
+  UpdateRideRecord:
+    handler: handlers/update_ride_record.handler
+    description: "Update Ride Record In Table"
+    memorySize: 128
+    timeout: 29
+    environment:
+      DDB_TABLE_NAME:
+        Ref: RideRecordTable
+    events:
+      - http:
+          method: PUT
+          path: "${self:custom.sevrice_url_path_base}/{Id}"
+
+  DeleteRideRecord:
+    handler: handlers/delete_ride_record.handler
+    description: "Delete Ride Record In Table"
+    memorySize: 128
+    timeout: 29
+    environment:
+      DDB_TABLE_NAME:
+        Ref: RideRecordTable
+    events:
+      - http:
+          method: DELETE
+          path: "${self:custom.sevrice_url_path_base}/{Id}"
+
+  GetRideRecord:
+    handler: handlers/get_ride_record.handler
+    description: "Get Ride Record In Table"
+    memorySize: 128
+    timeout: 29
+    environment:
+      DDB_TABLE_NAME:
+        Ref: RideRecordTable
+    events:
+      - http:
+          method: GET
+          path: "${self:custom.sevrice_url_path_base}/{Id}"
 
 resources:
   Resources:
