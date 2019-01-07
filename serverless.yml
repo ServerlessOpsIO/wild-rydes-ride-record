@@ -35,31 +35,10 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
-      Resource:
-        Fn::GetAtt:
-          - RideRecordTable
-          - Arn
-    - Effect: Allow
-      Action:
         - dynamodb:UpdateItem
-      Resource:
-        Fn::GetAtt:
-          - RideRecordTable
-          - Arn
-    - Effect: Allow
-      Action:
         - dynamodb:DeleteItem
-      Resource:
-        Fn::GetAtt:
-          - RideRecordTable
-          - Arn
-    - Effect: Allow
-      Action:
         - dynamodb:GetItem
-      Resource:
-        Fn::GetAtt:
-          - RideRecordTable
-          - Arn
+      Resource: '*'
     - Effect: Allow
       Action:
         - sqs:SendMessage
