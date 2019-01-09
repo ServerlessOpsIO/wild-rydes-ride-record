@@ -38,7 +38,10 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:GetItem
-      Resource: '*'
+      Resource:
+        Fn::GetAtt:
+          - RideRecordTable
+          - Arn
     - Effect: Allow
       Action:
         - sqs:SendMessage
